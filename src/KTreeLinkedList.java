@@ -1,3 +1,5 @@
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -155,7 +157,15 @@ public class KTreeLinkedList<E>
 	 */
 	public E get(int i)
 	{
-		return null;
+		if(i >= capacity) throw new IndexOutOfBoundsException("Index >= "+capacity);
+		if(i == 0) return root.data;
+		int index = 0;
+		Queue<Node<E>> queue = new LinkedList<>();
+		queue.add(root);
+		while(!queue.isEmpty() && index++ != i){
+			queue.addAll(queue.remove().children);
+		}
+		return queue.remove().data;
 	}
 
 	/**
@@ -243,9 +253,10 @@ public class KTreeLinkedList<E>
 	{
 		System.out.println("\nTesting a 3-ary Tree\n");
 
-		Integer[] numArray = {0,1,2,null,4,5,6,null,null,9,null,null,null};
+		Integer[] numArray = {0,1,2,3,4,5,6,null,null,9,null,11,null};
 
 		KTreeLinkedList<Integer> integerKTree = new KTreeLinkedList<>(numArray,3);
+		System.out.println(integerKTree.get(11));
 	}
 
 }
