@@ -199,6 +199,50 @@ public class KTreeLinkedList<E>
 		return null;
 	}
 
+	public void preorder()
+	{
+		preorder(root);
+	}
+
+	public void postorder()
+	{
+		postorder(root);
+	}
+
+	public void levelOrder()
+	{
+		Queue<Node<E>> queue = new LinkedList<>();
+		queue.add(root);
+		while(!queue.isEmpty()){
+			System.out.print(queue.peek().data + " ");
+			queue.addAll(queue.remove().children);
+		}
+	}
+
+	private void preorder(Node<E> root)
+	{
+		if(root == null){
+			System.out.println();
+			return;
+		}
+		System.out.print(root.data + " ");
+		for(Node<E> node : root.children){
+			preorder(node);
+		}
+	}
+
+	private void postorder(Node<E> root)
+	{
+		if(root == null){
+			System.out.println();
+			return;
+		}
+		for(Node<E> node : root.children){
+			postorder(node);
+		}
+		System.out.print(root.data + " ");
+	}
+
 	/**
 	 * Creates an expanded version of tree with accurate representation of
 	 * the levels. It reflects the height as well as the number of nodes, including
@@ -253,10 +297,16 @@ public class KTreeLinkedList<E>
 	{
 		System.out.println("\nTesting a 3-ary Tree\n");
 
-		Integer[] numArray = {0,1,2,3,4,5,6,null,null,9,null,11,null};
+		Integer[] numArray = {0,1,2,null,4,5,6,null,null,9,null,null,null};
 
 		KTreeLinkedList<Integer> integerKTree = new KTreeLinkedList<>(numArray,3);
 		System.out.println(integerKTree.get(11));
+
+		integerKTree.preorder();
+		System.out.println();
+		integerKTree.postorder();
+		System.out.println();
+		integerKTree.levelOrder();
 	}
 
 }
