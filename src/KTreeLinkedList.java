@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -61,20 +59,28 @@ public class KTreeLinkedList<E>
 		storeToTree(arrayTree);
 	}
 
+	/**
+	 * Converts the array representation of k-ary tree to a Linked List version
+	 * @param arrayTree K-ary Tree
+	 */
 	private void storeToTree(E[] arrayTree)
 	{
-		for (int i = 0; i < arrayTree.length; i++) {
-			E e = arrayTree[i];
-			root = insertUsingLevelOrder(root,e);
-			System.out.println();
+		for (E e : arrayTree) {
+			root = insert(root, e);
+			if (e != null) numElem++;
 		}
 	}
 
-	private Node<E> insertUsingLevelOrder(Node<E> root, E data)
+	/**
+	 * Insert a given node in the tree
+	 * @param root Root of the tree
+	 * @param data Data to be added
+	 * @return Root Node
+	 */
+	private Node<E> insert(Node<E> root, E data)
 	{
 		if(root == null){
 			root = new Node<>(data);
-			numElem++;
 			return root;
 		}else {
 			Queue<Node<E>> queue = new LinkedList<>();
@@ -86,7 +92,6 @@ public class KTreeLinkedList<E>
 						throw new InvalidTreeException();
 					}
 					parentNode.addChildren(new Node<>(data), k);
-					numElem++;
 					return root;
 				} else {
 					queue.addAll(parentNode.children);
