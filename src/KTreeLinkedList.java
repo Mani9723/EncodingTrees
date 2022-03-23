@@ -5,7 +5,7 @@ import java.util.*;
  * A general tree with K children. Uses Linked List as
  * the data structure.
  */
-public class KTreeLinkedList<E>
+public class KTreeLinkedList<E> implements TreeIterable<E>
 {
 
 	/**
@@ -233,6 +233,7 @@ public class KTreeLinkedList<E>
 		return array;
 	}
 
+
 	public void preorder()
 	{
 		preorder(root);
@@ -277,6 +278,72 @@ public class KTreeLinkedList<E>
 		System.out.print(root.data + " ");
 	}
 
+	@Override
+	public Iterator<E> getLevelOrderIterator()
+	{
+		Queue<Node<E>> iteratorQueue = new LinkedList<>();
+		iteratorQueue.add(root);
+
+		return new Iterator<E>()
+		{
+			int visited = 0;
+			@Override
+			public boolean hasNext()
+			{
+				return !iteratorQueue.isEmpty() && visited < numElem ;
+			}
+
+			@Override
+			public E next()
+			{
+				Node<E> node = iteratorQueue.remove();
+				if(node.data == null) {
+					while (node.data == null) {
+						if(node.children.size() > 0) {
+							iteratorQueue.addAll(node.children);
+						}
+						node = iteratorQueue.remove();
+					}
+				}else {
+					iteratorQueue.addAll(node.children);
+				}
+				visited++;
+				return node.data;
+			}
+		};
+	}
+
+	@Override
+	public Iterator<E> getPreOrderIterator()
+	{
+		Stack<Node<E>> stack = new Stack<>();
+		stack.push(root);
+		return new Iterator<E>()
+		{
+			@Override
+			public boolean hasNext()
+			{
+				return !stack.isEmpty();
+			}
+
+			@Override
+			public E next()
+			{
+				Node<E> node = stack.pop();
+				stack.addAll(node.children);
+				return node.data;
+			}
+		};
+	}
+
+	@Override
+	public Iterator<E> getPostOrderIterator()
+	{
+		return null;
+	}
+
+
+
 	/**
 	 * Creates an expanded version of tree with accurate representation of
 	 * the levels. It reflects the height as well as the number of nodes, including
@@ -319,12 +386,22 @@ public class KTreeLinkedList<E>
 	 */
 	public E[] subtree(int i)
 	{
-		return null;
-	}
+		int index = 0;
+		Queue<Node<E>> queue = new LinkedList<>();
+		queue.add(root);
+		while(!queue.isEmpty() && index++ != i){
+			queue.addAll(queue.remove().children);
+		}
+		E[] subtree = (E[]) new Object[capacity-i];
+		int j = 0;
+		Queue<Node<E>> queue1 = new LinkedList<>();
+		queue1.add(queue.remove());
+		while(!queue1.isEmpty()){
+			subtree[j] = queue1.remove().data;
+			queue.addAll(queue1.remove().children);
+		}
 
-	public E[] mirror()
-	{
-		return null;
+		return subtree;
 	}
 
 	public static void main(String[] args)
@@ -334,8 +411,10 @@ public class KTreeLinkedList<E>
 		Integer[] numArray = {0,1,2,null,4,5,6,null,null,9,null,null,null};
 
 		KTreeLinkedList<Integer> integerKTree = new KTreeLinkedList<>(numArray,3);
-//		System.out.println(integerKTree.get(11));
+		System.out.println(integerKTree.get(11));
 //		integerKTree.set(11,23);
+
+		integerKTree.subtree(1);
 
 		integerKTree.preorder();
 		System.out.println();
@@ -343,10 +422,15 @@ public class KTreeLinkedList<E>
 		System.out.println();
 		integerKTree.levelOrder();
 		System.out.println();
-		Object[] a = integerKTree.toArray();
-		for (Object o : a) {
-			System.out.print(o + " ");
 
+		Iterator<Integer> iterator = integerKTree.getLevelOrderIterator();;
+		while(iterator.hasNext()){
+			System.out.print(iterator.next() + " ");
+		}
+		System.out.println();
+		Iterator<Integer> iteratorPreOrder = integerKTree.getPreOrderIterator();;
+		while(iteratorPreOrder.hasNext()){
+			System.out.print(iteratorPreOrder.next() + " ");
 		}
 	}
 
