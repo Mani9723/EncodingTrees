@@ -178,13 +178,42 @@ public class KTreeLinkedList<E>
 	 * {@link InvalidTreeException} is thrown if attempting to remove node
 	 * with children or create a node without any parents
 	 *
-	 * @param i Location
+	 * @param index Location
 	 * @param value Value
 	 * @return True if success.
 	 */
-	public boolean set(int i, E value)
+	public boolean set(int index, E value)
 	{
-		return false;
+		if(index < 0){
+			return false;
+		} if(index == 0){
+			root.data = value;
+			if(value == null){
+				numElem = 0;
+				h = 0;
+				capacity = 0;
+			}
+			return true;
+		} else{
+			int i = 0;
+			Node<E> parentNode = null;
+			Queue<Node<E>> queue = new LinkedList<>();
+			queue.add(root);
+			while(!queue.isEmpty() && i++ != index){
+				parentNode = queue.remove();
+				queue.addAll(parentNode.children);
+			}if(parentNode.data == null && value != null){
+				throw new InvalidTreeException();
+			}else{
+				if(queue.element().data == null && value != null){
+					numElem++;
+				}else if(queue.element().data != null && value == null){
+					numElem--;
+				}
+				queue.element().data = value;
+				return true;
+			}
+		}
 	}
 
 	/**
@@ -301,6 +330,7 @@ public class KTreeLinkedList<E>
 
 		KTreeLinkedList<Integer> integerKTree = new KTreeLinkedList<>(numArray,3);
 		System.out.println(integerKTree.get(11));
+		integerKTree.set(11,23);
 
 		integerKTree.preorder();
 		System.out.println();

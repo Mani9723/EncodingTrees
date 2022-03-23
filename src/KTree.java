@@ -119,7 +119,7 @@ public class KTree<E> implements TreeIterable<E>
 	 * Sets/Removes nodes based on the provided location with
 	 * the provided value.
 	 *  If value is null then the node is removed otherwise it
-	 *  simply replaces an exisiting node.
+	 *  simply replaces an existing node.
 	 *  New nodes can also be added if the location given has a parent.
 	 *
 	 * {@link InvalidTreeException} is thrown if attempting to remove node
