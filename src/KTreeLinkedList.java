@@ -59,6 +59,7 @@ public class KTreeLinkedList<E>
 		this.k = k;
 		capacity = arrayTree.length;
 		storeToTree(arrayTree);
+		System.out.println(findHeight(root));
 	}
 
 	/**
@@ -105,17 +106,17 @@ public class KTreeLinkedList<E>
 
 	private int findHeight(Node<E> root)
 	{
-		if(root == null){
-			return 0;
+		int height = -1;
+		if (root == null ) {
+			return height;
 		}
-		if(root.children != null){
-			for(Node<E> node : root.children){
-				int tempH = findHeight(node);
-				h = Math.max(h,tempH);
-			}
-			h++;
+		if (root.children == null) {
+			return 1;
 		}
-		return h;
+		for (Node<E> child : root.children) {
+			height = Math.max(height, findHeight(child));
+		}
+		return height + 1;
 	}
 
 
@@ -189,8 +190,7 @@ public class KTreeLinkedList<E>
 		} if(index == 0){
 			root.data = value;
 			if(value == null){
-				numElem = 0;
-				h = 0;
+				numElem = 0; h = 0;
 				capacity = 0;
 			}
 			return true;
@@ -330,7 +330,7 @@ public class KTreeLinkedList<E>
 
 		KTreeLinkedList<Integer> integerKTree = new KTreeLinkedList<>(numArray,3);
 		System.out.println(integerKTree.get(11));
-		integerKTree.set(11,23);
+//		integerKTree.set(11,23);
 
 		integerKTree.preorder();
 		System.out.println();
