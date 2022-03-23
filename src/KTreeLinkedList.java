@@ -1,7 +1,4 @@
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 
 /**
@@ -225,7 +222,15 @@ public class KTreeLinkedList<E>
 	 */
 	public Object[] toArray()
 	{
-		return null;
+		Object[] array = new Object[capacity];
+		Queue<Node<E>> queue = new LinkedList<>();
+		int i = 0;
+		queue.add(root);
+		while(!queue.isEmpty()){
+			array[i++] = queue.element().data;
+			queue.addAll(queue.remove().children);
+		}
+		return array;
 	}
 
 	public void preorder()
@@ -329,7 +334,7 @@ public class KTreeLinkedList<E>
 		Integer[] numArray = {0,1,2,null,4,5,6,null,null,9,null,null,null};
 
 		KTreeLinkedList<Integer> integerKTree = new KTreeLinkedList<>(numArray,3);
-		System.out.println(integerKTree.get(11));
+//		System.out.println(integerKTree.get(11));
 //		integerKTree.set(11,23);
 
 		integerKTree.preorder();
@@ -337,6 +342,12 @@ public class KTreeLinkedList<E>
 		integerKTree.postorder();
 		System.out.println();
 		integerKTree.levelOrder();
+		System.out.println();
+		Object[] a = integerKTree.toArray();
+		for (Object o : a) {
+			System.out.print(o + " ");
+
+		}
 	}
 
 }
